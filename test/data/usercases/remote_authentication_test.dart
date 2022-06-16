@@ -51,13 +51,23 @@ void main(){
 
    });
 
-   test('Should throw NotFound if HttpCLient returns 500',() async{
+   test('Should throw UnexpectedError if HttpCLient returns 500',() async{
      when(httpClientSpy.request(url: anyNamed('url'), body: anyNamed('body'))).thenThrow(HttpError.serverError);
 
      final params = AuthenticationParams(email: faker.internet.email(), secret: faker.internet.password());
      final future = sut.auth(params);
 
      expect(future, throwsA(DomainError.unexpected));
+
+   });
+
+   test('Should throw InvalidCredentials if HttpCLient returns 401',() async{
+     when(httpClientSpy.request(url: anyNamed('url'), body: anyNamed('body'))).thenThrow(HttpError.unauthorized);
+
+     final params = AuthenticationParams(email: faker.internet.email(), secret: faker.internet.password());
+     final future = sut.auth(params);
+
+     expect(future, throwsA(DomainError.invalidCredentials));
 
    });
 }
