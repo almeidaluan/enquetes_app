@@ -1,3 +1,6 @@
+import 'package:enquetes_app/data/http/HttpError.dart';
+import 'package:enquetes_app/domain/helpers/DomainError.dart';
+
 import '../../domain/usercases/Authentication.dart';
 import '../http/HttpClient.dart';
 
@@ -9,7 +12,11 @@ class RemoteAuthentication{
 
   Future<void> auth(AuthenticationParams params) async{
 
-    await httpClient.request(url: url, body: RemoteAuthenticationParams.fromEntity(params).toJSON());
+    try{
+        await httpClient.request(url: url, body: RemoteAuthenticationParams.fromEntity(params).toJSON());
+    } on HttpError{
+      throw DomainError.unexpected;
+    }
   }
 
 }
