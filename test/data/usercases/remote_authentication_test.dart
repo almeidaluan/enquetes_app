@@ -1,3 +1,4 @@
+import 'package:enquetes_app/domain/usercases/Authentication.dart';
 import 'package:faker/faker.dart';
 import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
@@ -9,14 +10,17 @@ class RemoteAuthentication{
 
   RemoteAuthentication({ required this.httpClient, required this.url});
 
-  Future<void> auth() async{
-    await httpClient.request(url: url);
+  Future<void> auth(AuthenticationParams params) async{
+
+    final body = {'email': params.email, 'password': params.secret};
+
+    await httpClient.request(url: url, body: body);
   }
 
 }
 
 abstract class HttpClient{
-  Future<void>? request({required String url});
+  Future<void>? request({required String url, Map body});
 }
 
 class HttpClientSpy extends Mock implements HttpClient{
@@ -35,9 +39,9 @@ void main(){
   });
 
   test('Should call HttpClient with correct URL',() async{
-
-    await sut.auth();
-    verify(httpClientSpy.request(url: url));
-
+    final params = AuthenticationParams(email: faker.internet.email(), secret: faker.internet.password());
+    await sut.auth(params);
+    verify(httpClientSpy.request(url: url, body: {'email':params.email,'password': params.secret}
+    ));
   });
 }

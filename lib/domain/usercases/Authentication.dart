@@ -9,6 +9,8 @@ abstract class Authentication{
 
 
 class AuthenticationParams{
+  String? email;
+  String? secret;
 
   AuthenticationParams({
     required String email,
