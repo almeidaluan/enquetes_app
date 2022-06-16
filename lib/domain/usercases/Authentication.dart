@@ -16,4 +16,6 @@ class AuthenticationParams{
     required String email,
     required String secret
   });
+
+  Map toJSON() => {'email': email, 'password': secret};
 }
