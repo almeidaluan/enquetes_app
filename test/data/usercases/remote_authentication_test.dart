@@ -50,4 +50,14 @@ void main(){
      expect(future, throwsA(DomainError.unexpected));
 
    });
+
+   test('Should throw NotFound if HttpCLient returns 500',() async{
+     when(httpClientSpy.request(url: anyNamed('url'), body: anyNamed('body'))).thenThrow(HttpError.serverError);
+
+     final params = AuthenticationParams(email: faker.internet.email(), secret: faker.internet.password());
+     final future = sut.auth(params);
+
+     expect(future, throwsA(DomainError.unexpected));
+
+   });
 }
