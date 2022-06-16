@@ -14,9 +14,9 @@ class HttpClientSpy extends Mock implements HttpClient{
 }
 
 void main(){
-  late final RemoteAuthentication sut;
-  late final HttpClientSpy httpClientSpy;
-  late final String url;
+   late final RemoteAuthentication sut;
+   late final HttpClientSpy httpClientSpy;
+   late final String url;
 
   setUp((){
     httpClientSpy = HttpClientSpy();
@@ -40,4 +40,14 @@ void main(){
     expect(future, throwsA(DomainError.unexpected));
 
   });
+
+   test('Should throw NotFound if HttpCLient returns 404',() async{
+     when(httpClientSpy.request(url: anyNamed('url'), body: anyNamed('body'))).thenThrow(HttpError.notFound);
+
+     final params = AuthenticationParams(email: faker.internet.email(), secret: faker.internet.password());
+     final future = sut.auth(params);
+
+     expect(future, throwsA(DomainError.unexpected));
+
+   });
 }
