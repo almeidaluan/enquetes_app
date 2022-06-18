@@ -14,9 +14,9 @@ class HttpClientSpy extends Mock implements HttpClient{
 }
 
 void main(){
-   late final RemoteAuthentication sut;
-   late final HttpClientSpy httpClientSpy;
-   late final String url;
+  RemoteAuthentication sut;
+  HttpClientSpy httpClientSpy;
+  String url;
 
   setUp((){
     httpClientSpy = HttpClientSpy();
@@ -25,10 +25,18 @@ void main(){
   });
 
   test('Should call HttpClient with correct URL',() async{
+
+    final accessToken = faker.guid.guid();
+    when(httpClientSpy.request(url: anyNamed('url'), body: anyNamed('body')))
+        .thenAnswer((_) async =>
+    {'accessToken': accessToken,'name': faker.person.name()});
+
     final params = AuthenticationParams(email: faker.internet.email(), secret: faker.internet.password());
     await sut.auth(params);
+
     verify(httpClientSpy.request(url: url, body: {'email':params.email,'password': params.secret}
     ));
+
   });
 
   test('Should throw UnexpectedError if HttpCLient returns 400',() async{
@@ -68,6 +76,21 @@ void main(){
      final future = sut.auth(params);
 
      expect(future, throwsA(DomainError.invalidCredentials));
+
+   });
+
+
+   test('Should return an Account if HttpCLient returns 200',() async{
+     final accessToken = faker.guid.guid();
+
+     when(httpClientSpy.request(url: anyNamed('url'), body: anyNamed('body')))
+         .thenAnswer((_) async =>
+     {'accessToken': accessToken,'name': faker.person.name()});
+
+     final params = AuthenticationParams(email: faker.internet.email(), secret: faker.internet.password());
+     final account = await sut.auth(params);
+
+     expect(account.accessToken, accessToken);
 
    });
 }

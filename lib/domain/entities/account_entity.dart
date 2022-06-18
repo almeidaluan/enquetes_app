@@ -1,6 +1,13 @@
 class AccountEntity{
 
-  final String token;
+  final String accessToken;
 
-  AccountEntity(this.token);
+  AccountEntity(this.accessToken);
+
+  factory AccountEntity.fromJSON(Map json) =>
+      AccountEntity(json['accessToken']);
+
+  AccountEntity toEntity() => AccountEntity(accessToken);
+
+
 }
