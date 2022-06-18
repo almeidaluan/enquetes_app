@@ -1,4 +1,5 @@
 import 'package:enquetes_app/data/http/HttpError.dart';
+import 'package:enquetes_app/data/models/RemoteAccountModel.dart';
 import 'package:enquetes_app/domain/entities/account_entity.dart';
 import 'package:enquetes_app/domain/helpers/DomainError.dart';
 
@@ -15,7 +16,7 @@ class RemoteAuthentication{
 
     try{
          final httpResponse = await httpClient.request(url: url, body: RemoteAuthenticationParams.fromEntity(params).toJSON());
-         return AccountEntity.fromJSON(httpResponse).toEntity();
+         return RemoteAccountModel.fromJSON(httpResponse).toEntity();
     } on HttpError catch(error){
       throw error == HttpError.unauthorized
           ? DomainError.invalidCredentials

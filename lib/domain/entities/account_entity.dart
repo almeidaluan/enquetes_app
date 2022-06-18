@@ -7,7 +7,5 @@ class AccountEntity{
   factory AccountEntity.fromJSON(Map json) =>
       AccountEntity(json['accessToken']);
 
-  AccountEntity toEntity() => AccountEntity(accessToken);
-
 
 }
