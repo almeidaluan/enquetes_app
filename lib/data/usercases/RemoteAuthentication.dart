@@ -6,7 +6,7 @@ import 'package:enquetes_app/domain/helpers/DomainError.dart';
 import '../../domain/usercases/Authentication.dart';
 import '../http/HttpClient.dart';
 
-class RemoteAuthentication{
+class RemoteAuthentication implements Authentication{
    final HttpClient httpClient;
    final String url;
 
